@@ -35,7 +35,8 @@ library(SignacX)
 <!-- CONTACT -->
 #### Contact
 
-Mathew Chamberlain - chamberlainphd@gmail.com
+Andre Kurlovs - andre.kurlovs@sanofi.com
+Nima Nouri -- nima.nouri@sanofi.com
 
 <!-- MARKDOWN LINKS & IMAGES -->
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
