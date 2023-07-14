@@ -1,16 +1,19 @@
 citHeader("To cite this package in publications, please use:")
 
 citEntry(entry = "article",
-  author = personList(as.person("Mathew Chamberlain"),
+  author = personList(as.person("Mathew Chamberlain"), 
+                      as.person("Nima Nouri"),
+                      as.person("Andre Kurlovs"),
                       as.person("Richa Hanamsagar"),
                       as.person("Frank O. Nestle"),
                       as.person("Emanuele de Rinaldis"),
                       as.person("Virginia Savova")),
-  title = "Cell type classification and discovery across diseases, technologies and tissues reveals conserved gene signatures and enables standardized single-cell readouts",
-  journal = "bioRxiv",
-  year = "2021",
-  doi = "10.1101/2021.02.01.429207",
-  url = "https://doi.org/10.1101/2021.02.01.429207",
-  textVersion = "Chamberlain  et al. Cell type classification and discovery across diseases, technologies and tissues reveals conserved gene signatures and enables standardized single-cell readouts. bioRxiv (2021)."
+  title = "Cell Type Classification and Discovery across Diseases, Technologies and
+  Tissues Reveals Conserved Gene Signatures of Immune Phenotypes",
+  journal = "Journal of Bioinformatics and Systems Biology",
+  year = "2023",
+  doi = "10.26502/jbsb.5107057",
+  textVersion = "Chamberlain  et al. Cell Type Classification and Discovery across Diseases, Technologies and
+  Tissues Reveals Conserved Gene Signatures of Immune Phenotypes. (2023)."
 )
 
