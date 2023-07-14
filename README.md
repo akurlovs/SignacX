@@ -11,7 +11,7 @@
     <a href="https://sanofi-public.github.io/PMCB-SignacX/"><strong>Explore the Website »</strong></a>
     <br />
     <br />
-    <a href="https://htmlpreview.github.io?/https://github.com/Sanofi-Public/PMCB-SignacX/tree/main/vignettes/signac-Seurat_pbmcs.html">View Demo</a>
+    <a href="https://htmlpreview.github.io/?https://github.com/Sanofi-Public/PMCB-SignacX/blob/main/vignettes/signac-Seurat_pbmcs.html">View Demo</a>
     ·
     <a href="https://github.com/Sanofi-Public/PMCB-SignacX/">View Code Base</a>
     ·
