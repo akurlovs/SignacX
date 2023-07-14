@@ -10,46 +10,32 @@
   <p align="center">
     Get the most out of your single cell data.
     <br />
-    <a href="https://mathewchamberlain.github.io/SignacX/"><strong>Explore the Website »</strong></a>
+    <a href="https://sanofi-public.github.io/PMCB-SignacX/"><strong>Explore the Website »</strong></a>
     <br />
     <br />
-    <a href="https://htmlpreview.github.io/?https://github.com/mathewchamberlain/SignacX/master/vignettes/signac-Seurat_pbmcs.html">View Demo</a>
+    <a href="https://htmlpreview.github.io/?https://github.com/Sanofi-Public/PMCB-SignacX/tree/main/vignettes/signac-Seurat_pbmcs.html">View Demo</a>
     ·
-    <a href="https://github.com/mathewchamberlain/SignacX/">View Code Base</a>
+    <a href="https://github.com/Sanofi-Public/PMCB-SignacX/">View Code Base</a>
     ·
-    <a href="https://github.com/mathewchamberlain/SignacX/issues">Request Feature</a>
+    <a href="https://github.com/Sanofi-Public/PMCB-SignacX/issues">Request Feature</a>
   </p>
 </p>
 
 <!-- ABOUT THE PROJECT -->
 #### What is SignacX?
 
-SignacX is software that classifies the cellular phenotype for each individual cell in single cell RNA-sequencing data using neural networks trained with sorted bulk gene expression data from the [Human Primary Cell Atlas](https://bmcgenomics.biomedcentral.com/articles/10.1186/1471-2164-14-632). To learn more, check out the [pre-print](https://www.biorxiv.org/content/10.1101/2021.02.01.429207v3.full), [website](https://mathewchamberlain.github.io/SignacX/) and [code base](https://github.com/mathewchamberlain/SignacX/). You can install SignacX from CRAN by running:
+SignacX is software that classifies the cellular phenotype for each individual cell in single cell RNA-sequencing data using neural networks trained with sorted bulk gene expression data from the [Human Primary Cell Atlas](https://bmcgenomics.biomedcentral.com/articles/10.1186/1471-2164-14-632). To learn more, check out the [pre-print](https://www.biorxiv.org/content/10.1101/2021.02.01.429207v3.full), [website](https://sanofi-public.github.io/PMCB-SignacX/) and [code base](https://github.com/Sanofi-Public/PMCB-SignacX/). You can install SignacX from CRAN by running:
 
 ```R
 install.packages("SignacX")
 library(SignacX)
 ```
 
-
 <!-- CONTACT -->
 #### Contact
 
 Andre Kurlovs - andre.kurlovs@sanofi.com
 Nima Nouri -- nima.nouri@sanofi.com
-
-<!-- MARKDOWN LINKS & IMAGES -->
-<!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
-[contributors-shield]: https://img.shields.io/github/contributors/mathewchamberlain/SignacX.svg?style=flat-square
-[contributors-url]: https://github.com/mathewchamberlain/SignacX/graphs/contributors
-[forks-shield]: https://img.shields.io/github/forks/mathewchamberlain/SignacX.svg?style=flat-square
-[forks-url]: https://github.com/mathewchamberlain/SignacX/network/members
-[stars-shield]: https://img.shields.io/github/stars/mathewchamberlain/SignacX.svg?style=flat-square
-[stars-url]: https://github.com/mathewchamberlain/SignacX/stargazers
-[issues-shield]: https://img.shields.io/github/issues/mathewchamberlain/SignacX.svg?style=flat-square
-[issues-url]: https://github.com/mathewchamberlain/SignacX/issues
-[license-shield]: https://img.shields.io/github/license/mathewchamberlain/SignacX.svg?style=flat-square
-[license-url]: https://choosealicense.com/licenses/gpl-3.0/
 
 <!-- NEWS -->
 #### SignacX version history
