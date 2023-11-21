@@ -268,7 +268,7 @@ SignacBoot <- function (E, L, labels, size = 1000, impute = TRUE, spring.dir = N
     V = E[logik,]
     colnames(V) <- 1:ncol(V)
   } else {
-    V = E@assays[[default.assay]]@counts[logik,]
+    V = E@assays[[default.assay]]$counts[logik,]
   }
 
   # run feature selection

@@ -109,7 +109,7 @@ Signac <- function(E, R = 'default', spring.dir = NULL, N = 100, num.cores = 1, 
     {
       V = CID.Normalize(V)
     } else {
-      V = CID.Normalize(V@assays[[default.assay]]@counts)
+      V = CID.Normalize(V@assays[[default.assay]]$counts)
     }
   }
   
