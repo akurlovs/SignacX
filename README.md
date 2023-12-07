@@ -1,10 +1,7 @@
-[![CRAN Version](https://www.r-pkg.org/badges/version/SignacX)](https://cran.r-project.org/package=SignacX)
-[![CRAN Downloads](https://cranlogs.r-pkg.org/badges/grand-total/SignacX)](https://cran.r-project.org/package=SignacX)
-
 <!-- PROJECT LOGO -->
 <br />
 <p align="center">
-  <h3 align="center">SignacX 2.2.4</h3>
+  <h3 align="center">SignacX 2.2.5</h3>
   <p align="center">
     Get the most out of your single cell data.
     <br />
@@ -22,10 +19,10 @@
 <!-- ABOUT THE PROJECT -->
 #### What is SignacX?
 
-SignacX is software that classifies the cellular phenotype for each individual cell in single cell RNA-sequencing data using neural networks trained with sorted bulk gene expression data from the [Human Primary Cell Atlas](https://bmcgenomics.biomedcentral.com/articles/10.1186/1471-2164-14-632). To learn more, check out the [publication](https://www.fortunejournals.com/abstract/cell-type-classification-and-discovery-across-diseases-technologies-and-tissues-reveals-conserved-gene-signatures-of-immune-phenot-4289.html) Cell Type Classification and Discovery across Diseases, Technologies and Tissues Reveals Conserved Gene Signatures of Immune Phenotypes), [website](https://sanofi-public.github.io/PMCB-SignacX/) and [code base](https://github.com/Sanofi-Public/PMCB-SignacX/). You can install SignacX from CRAN by running:
+SignacX is software that classifies the cellular phenotype for each individual cell in single cell RNA-sequencing data using neural networks trained with sorted bulk gene expression data from the [Human Primary Cell Atlas](https://bmcgenomics.biomedcentral.com/articles/10.1186/1471-2164-14-632). To learn more, check out the [publication](https://www.fortunejournals.com/abstract/cell-type-classification-and-discovery-across-diseases-technologies-and-tissues-reveals-conserved-gene-signatures-of-immune-phenot-4289.html) Cell Type Classification and Discovery across Diseases, Technologies and Tissues Reveals Conserved Gene Signatures of Immune Phenotypes), [website](https://sanofi-public.github.io/PMCB-SignacX/) and [code base](https://github.com/Sanofi-Public/PMCB-SignacX/). You can install SignacX from GitHub:
 
 ```R
-install.packages("SignacX")
+devtools::install_github("Sanofi-Public/PMCB-SignacX", ref = "main")
 library(SignacX)
 ```
 
@@ -37,6 +34,10 @@ Nima Nouri -- nima.nouri@sanofi.com
 
 <!-- NEWS -->
 #### SignacX version history
+
+##### SignacX 2.2.5 (2023-11-21) 
+
+Upgraded SignacX to use Seurat v5.
 
 ##### SignacX 2.2.4 (2021-07-20) 
 
