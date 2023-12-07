@@ -20,6 +20,7 @@
 #' @param hidden Number of hidden layers in the neural network. Default is 1.
 #' @param set.seed If true, seed is set to ensure reproducibility of these results. Default is TRUE.
 #' @param seed if set.seed is TRUE, seed is set to 42.
+#' @param graph.used If using Seurat object by default, Signac uses the nearest neighbor graph in the graphs field of the Seurat object. Other options are "wnn" to use weighted nearest neighbors, as well as "snn" to use shared nearest neighbors.
 #' @return A list of character vectors: cell type annotations (L1, L2, ...) at each level of the hierarchy
 #' as well as 'clusters' for the Louvain clustering results.
 #' @seealso \code{\link{SignacFast}}, a faster alternative that only differs from \code{\link{Signac}} in nuanced T cell phenotypes.
@@ -55,7 +56,7 @@
 #' # save results
 #' saveRDS(pbmc, "example_pbmcs.rds")
 #' }
-Signac <- function(E, R = 'default', spring.dir = NULL, N = 100, num.cores = 1, threshold = 0, smooth = TRUE, impute = TRUE, verbose = TRUE, do.normalize = TRUE, return.probability = FALSE, hidden = 1, set.seed = TRUE, seed = '42')
+Signac <- function(E, R = 'default', spring.dir = NULL, N = 100, num.cores = 1, threshold = 0, smooth = TRUE, impute = TRUE, verbose = TRUE, do.normalize = TRUE, return.probability = FALSE, hidden = 1, set.seed = TRUE, seed = '42', graph.used = "nn")
 {
   if (!is.null(spring.dir))
     spring.dir = gsub("\\/$", "", spring.dir, perl = TRUE)
@@ -67,12 +68,7 @@ Signac <- function(E, R = 'default', spring.dir = NULL, N = 100, num.cores = 1, 
   
   if (flag){
     default.assay <- Seurat::DefaultAssay(E)
-    logik = any(grepl(paste0(default.assay, "nn"), names(E@graphs)))
-    if (logik) {
-      edges = E@graphs[[which(grepl(paste0(default.assay, "nn"), names(E@graphs)))]]
-    } else {
-      edges = E@graphs[[1]]
-    }
+    edges = E@graphs[[which(grepl(paste0(default.assay, "_", graph.used), names(E@graphs)))]]
   }
   
   if (verbose)
@@ -93,7 +89,8 @@ Signac <- function(E, R = 'default', spring.dir = NULL, N = 100, num.cores = 1, 
   
   # keep only unique row names
   logik = CID.IsUnique(rownames(E))
-  E = E[logik,]
+  if (sum(logik) != length(logik))
+    E = E[logik,]
   
   # intersect genes with reference set
   gns = intersect(rownames(E), R$genes)
@@ -126,13 +123,18 @@ Signac <- function(E, R = 'default', spring.dir = NULL, N = 100, num.cores = 1, 
   V = V[!logik,]
   
   # set up imputation matrices
+  # set up imputation matrices
   if (flag) {
-    dM = CID.GetDistMat(edges)
     louvain = CID.Louvain(edges = edges)
+    if (nrow(edges) != ncol(edges)) {
+      edges = CID.GetDistMat(edges, n = 1)
+    } else {
+      edges = list(edges)
+    }
   } else {
     edges = CID.LoadEdges(data.dir = spring.dir)
-    dM = CID.GetDistMat(edges)
     louvain = CID.Louvain(edges = edges)
+    edges = CID.GetDistMat(edges, n = 1)
   }
   res = pbmcapply::pbmclapply(R$Reference, FUN = function(x){
     # keep same gene names
@@ -150,7 +152,7 @@ Signac <- function(E, R = 'default', spring.dir = NULL, N = 100, num.cores = 1, 
     
     # run imputation (if desired)
     if (impute){
-      Z = KSoftImpute(E = Z, dM = dM, verbose = FALSE)
+      Z = KSoftImpute(E = Z, dM = edges, verbose = FALSE)
       Z = t(apply(Z, 1, function(x){
         normalize(x)
       }))
@@ -185,7 +187,7 @@ Signac <- function(E, R = 'default', spring.dir = NULL, N = 100, num.cores = 1, 
     
     # smooth the output classifications
     if (smooth & any(as.character(unique(x$celltypes)) %in% c("Immune", "Myeloid", "NonImmune", "Lymphocytes", "Monocytes.Neutrophils", "Monocytes", "Fibroblasts", "Epithelial", "T", "NK", "T.CD8", "T.CD4")))
-      df$celltypes = CID.smooth(df$celltypes, dM[[1]])
+      df$celltypes = CID.smooth(df$celltypes, edges[[1]])
     
     # return probabilities and cell type classifications
     if (return.probability){

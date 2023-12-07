@@ -43,6 +43,7 @@ GetTrainingData_HPCA <- function(){
 #' @param new_populations Character vector specifying any new cell types that were learned by Signac. Default is NULL.
 #' @param new_categories If new_populations are set to a cell type, new_category is a corresponding character vector indicating the population that the new population belongs to. Default is NULL.
 #' @param min.cells If desired, any cell population with equal to or less than N cells is set to "Unclassified." Default is 10 cells.
+#' @param graph.used If using Seurat object by default, Signac uses the nearest neighbor graph in the graphs field of the Seurat object. Other options are "wnn" to use weighted nearest neighbors, as well as "snn" to use shared nearest neighbors.
 #' @return A list of cell type labels for cell types, cell states and novel populations.
 #' @export
 #' @examples
@@ -60,40 +61,29 @@ GetTrainingData_HPCA <- function(){
 #' # run Seurat pipeline
 #' pbmc <- SCTransform(pbmc, verbose = FALSE)
 #' pbmc <- RunPCA(pbmc, verbose = FALSE)
-#' pbmc <- RunUMAP(pbmc, dims = 1:30, verbose = FALSE)
 #' pbmc <- FindNeighbors(pbmc, dims = 1:30, verbose = FALSE)
 #' 
-#' # download bootstrapped reference data for training models
-#' file.dir = "https://github.com/mathewchamberlain/Signac/blob/master/data/"
-#' file = "training_HPCA.rda"
-#' download.file(paste0(file.dir, file, "?raw=true"), destfile = "training_HPCA.rda")
-#' load("training_HPCA.rda")
-#' 
 #' # classify cells
-#' labels = SignacFast(E = pbmc, R = training_HPCA)
+#' labels = SignacFast(E = pbmc)
 #' celltypes = GenerateLabels(labels, E = pbmc)
 #' }
-GenerateLabels = function(cr, E = NULL, smooth = TRUE, new_populations = NULL, 
-                          new_categories = NULL, min.cells = 10,  spring.dir = NULL, graph.used = "nn")
+GenerateLabels = function(cr, E = NULL, smooth = TRUE, new_populations = NULL, new_categories = NULL, min.cells = 10,  spring.dir = NULL, graph.used = "nn")
 {
   
   # if using SPRING, load data
   if (!is.null(spring.dir)){
     edges = CID.LoadEdges(data.dir = spring.dir)
-    dM = CID.GetDistMat(edges)
+    edges = CID.GetDistMat(edges)
   }
   
   # check for Seurat object
   flag = class(E) == "Seurat"
-  
   if (flag) {
     default.assay <- Seurat::DefaultAssay(E)
-    edges = E@graphs[[which(grepl(paste0("_", graph.used), 
-                                  names(E@graphs)))]]
-    if (ncol(edges) > 1e+05) {
+    edges = E@graphs[[which(grepl(paste0("_", graph.used), names(E@graphs)))]]
+    if (ncol(edges) > 100000) {
       edges = list(edges)
-    }
-    else {
+    } else {
       edges = CID.GetDistMat(edges)
     }
   }
@@ -155,7 +145,16 @@ GenerateLabels = function(cr, E = NULL, smooth = TRUE, new_populations = NULL,
   celltypes[logik] = "Unclassified"
   immune[logik] = "Unclassified"
   
+  # set consistent cell type annotations
+  celltypes[cellstates %in% c("B.memory", "B.naive")] = "B"
+  celltypes[cellstates %in% c("DC", "Mon.Classical", "Mon.NonClassical", "Neutrophils", "Monocytes", "Macrophages")] = "MPh"
+  celltypes[cellstates %in% c("NK", "T.CD4.naive", "T.CD4.memory", "T.regs", "T.CD8.naive", "T.CD8.memory", "T.CD8.cm","T.CD8.em")] = "TNK"
+  celltypes[cellstates %in% c("Endothelial", "Fibroblasts", "Epithelial")] = "NonImmune"
+  immune[cellstates %in% c("Endothelial", "Fibroblasts", "Epithelial")] = "NonImmune"
+  immune[! cellstates %in% c("NonImmune", "Unclassified")] = "Immune"
+  
   res$Immune = immune
+  
   if (!is.null(spring.dir) | flag)
   {
   do = data.frame(table(louvain[cellstates == "Unclassified"]))
@@ -204,7 +203,7 @@ GenerateLabels = function(cr, E = NULL, smooth = TRUE, new_populations = NULL,
       return(xx)
     })
   }
-
+  
   return(res)
 }
 
@@ -283,7 +282,7 @@ SignacBoot <- function (E, L, labels, size = 1000, impute = TRUE, spring.dir = N
   # bootstrap data
   dat = V[rownames(V) %in% rownames(mrks),]
   mrks$cluster = L[1]
-  mrks$cluster[mrks$avg_log2FC < 0] = L[2]
+  mrks$cluster[mrks$avg_logFC < 0] = L[2]
   mrks$gene = rownames(mrks)
   
   xx = labels
@@ -753,7 +752,7 @@ CID.IsUnique <- function (x)
 #' @importClassesFrom Matrix dgCMatrix
 #' @return matrix.h5 file, where each is background corrected
 #' @export
-#' @importFrom rhdf5 h5createFile h5createGroup h5write h5write.default
+#' @importFrom rhdf5 h5createFile h5createGroup h5write
 #' @examples
 #' \dontrun{
 #' # download single cell data for classification
@@ -815,19 +814,19 @@ SaveCountsToH5 <- function(D, data.dir, genome = "GRCh38")
       fn = paste(y, fn, sep = "/")
       rhdf5::h5createFile(fn)
       rhdf5::h5createGroup(fn, genome)
-      rhdf5::h5write.default(x@Dimnames[[2]], file = fn, name = paste0(genome, "/barcodes"))
+      rhdf5::h5write(x@Dimnames[[2]], file = fn, name = paste0(genome, "/barcodes"))
       if (flag)
       {
-        rhdf5::h5write.default(genes, file = fn, name=paste0(genome, "/genes"))
-        rhdf5::h5write.default(gene_names, file = fn, name=paste0(genome, "/gene_names"))
+        rhdf5::h5write(genes, file = fn, name=paste0(genome, "/genes"))
+        rhdf5::h5write(gene_names, file = fn, name=paste0(genome, "/gene_names"))
       } else {
-        rhdf5::h5write.default(x@Dimnames[[1]], file = fn, name=paste0(genome, "/genes"))
-        rhdf5::h5write.default(x@Dimnames[[1]], file = fn, name=paste0(genome, "/gene_names"))
+        rhdf5::h5write(x@Dimnames[[1]], file = fn, name=paste0(genome, "/genes"))
+        rhdf5::h5write(x@Dimnames[[1]], file = fn, name=paste0(genome, "/gene_names"))
       }
-      rhdf5::h5write.default(x@x, file = fn, name=paste0(genome, "/data"))
-      rhdf5::h5write.default(dim(x), file = fn, name=paste0(genome, "/shape"))
-      rhdf5::h5write.default(x@i, file = fn, name=paste0(genome, "/indices")) # already zero-indexed.
-      rhdf5::h5write.default(x@p, file = fn, name=paste0(genome, "/indptr"))
+      rhdf5::h5write(x@x, file = fn, name=paste0(genome, "/data"))
+      rhdf5::h5write(dim(x), file = fn, name=paste0(genome, "/shape"))
+      rhdf5::h5write(x@i, file = fn, name=paste0(genome, "/indices")) # already zero-indexed.
+      rhdf5::h5write(x@p, file = fn, name=paste0(genome, "/indptr"))
     }, x = D, y = data.dirs)
   )
   rhdf5::h5closeAll()

@@ -15,6 +15,7 @@
 #' @param num.cores number of cores to use for parallel computation. Default is 1. 
 #' @param return.probability if TRUE, returns the probability associated with each cell type label. Default is TRUE.
 #' @param spring.dir If using SPRING, directory to categorical_coloring_data.json. Default is NULL.
+#' @param graph.used If using Seurat object by default, Signac uses the nearest neighbor graph in the graphs field of the Seurat object. Other options are "wnn" to use weighted nearest neighbors, as well as "snn" to use shared nearest neighbors.
 #' @seealso \code{\link{Signac}} for another classification function.
 #' @return A list of character vectors: cell type annotations (L1, L2, ...) at each level of the hierarchy
 #' as well as 'clusters' for the Louvain clustering results.
@@ -51,7 +52,7 @@
 #' saveRDS(pbmc, "pbmcs.rds")
 #' saveRDS(celltypes, "celltypes.rds")
 #' }
-SignacFast <- function(E, Models = 'default', spring.dir = NULL, num.cores = 1, threshold = 0, smooth = TRUE, impute = TRUE, verbose = TRUE, do.normalize = TRUE, return.probability = FALSE)
+SignacFast <- function(E, Models = 'default', spring.dir = NULL, num.cores = 1, threshold = 0, smooth = TRUE, impute = TRUE, verbose = TRUE, do.normalize = TRUE, return.probability = FALSE, graph.used = "nn")
 {
   if (Models == 'default')
     Models = GetModels_HPCA()
@@ -60,12 +61,7 @@ SignacFast <- function(E, Models = 'default', spring.dir = NULL, num.cores = 1, 
   
   if (flag){
     default.assay <- Seurat::DefaultAssay(E)
-    logik = any(grepl(paste0(default.assay, "nn"), names(E@graphs)))
-    if (logik) {
-      edges = E@graphs[[which(grepl(paste0(default.assay, "nn"), names(E@graphs)))]]
-    } else {
-      edges = E@graphs[[1]]
-    }
+    edges = E@graphs[[which(grepl(paste0(default.assay, "_", graph.used), names(E@graphs)))]]
   }
   
   if (verbose)
@@ -86,7 +82,8 @@ SignacFast <- function(E, Models = 'default', spring.dir = NULL, num.cores = 1, 
   
   # keep only unique row names
   logik = CID.IsUnique(rownames(E))
-  E = E[logik,]
+  if (sum(logik) != length(logik))
+    E = E[logik,]
   
   # intersect genes with reference set
   gns = sort(unique(unlist(sapply(Models, function(x){ x$genes }))))
@@ -120,12 +117,16 @@ SignacFast <- function(E, Models = 'default', spring.dir = NULL, num.cores = 1, 
   
   # set up imputation matrices
   if (flag) {
-    dM = CID.GetDistMat(edges)
     louvain = CID.Louvain(edges = edges)
+    if (nrow(edges) != ncol(edges)) {
+      edges = CID.GetDistMat(edges, n = 1)
+    } else {
+      edges = list(edges)
+    }
   } else {
     edges = CID.LoadEdges(data.dir = spring.dir)
-    dM = CID.GetDistMat(edges)
     louvain = CID.Louvain(edges = edges)
+    edges = CID.GetDistMat(edges, n = 1)
   }
   res = pbmcapply::pbmclapply(Models, FUN = function(x){
     
@@ -133,7 +134,7 @@ SignacFast <- function(E, Models = 'default', spring.dir = NULL, num.cores = 1, 
     
     # run imputation (if desired)
     if (impute){
-      Z = KSoftImpute(E = Z, dM = dM, verbose = FALSE)
+      Z = KSoftImpute(E = Z, dM = edges, verbose = FALSE)
       Z = t(apply(Z, 1, function(x){
         normalize(x)
       }))
@@ -165,7 +166,7 @@ SignacFast <- function(E, Models = 'default', spring.dir = NULL, num.cores = 1, 
     
     # smooth the output classifications
     if (smooth & any(as.character(unique(x$celltypes)) %in% c("Immune", "Myeloid", "NonImmune", "Lymphocytes", "Monocytes.Neutrophils", "Monocytes", "Fibroblasts", "Epithelial")))
-      df$celltypes = CID.smooth(df$celltypes, dM[[1]])
+      df$celltypes = CID.smooth(df$celltypes, edges[[1]])
     
     # return probabilities and cell type classifications
     if (return.probability){

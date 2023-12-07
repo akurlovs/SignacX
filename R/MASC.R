@@ -21,7 +21,8 @@
 #' d = data.frame(sapply(d, function(x) x$label_list))
 #' 
 #' # run MASC
-#' x = json_data$CellStates # optionally use clusters or cell types
+#' x = d$CellStates # optionally use clusters or cell types
+#' d$Disease = factor(d$Disease) # the contrast term must be encoded as a factor
 #' Q = MASC(d, cluster = x, contrast = 'Disease', random_effects = c( "Tissue", "Plate", "Sample"))
 #' }
 MASC <- function(dataset, cluster, contrast, random_effects = NULL, fixed_effects = NULL, verbose = FALSE) {
