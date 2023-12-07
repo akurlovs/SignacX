@@ -73,7 +73,8 @@ GetTrainingData_HPCA <- function(){
 #' labels = SignacFast(E = pbmc, R = training_HPCA)
 #' celltypes = GenerateLabels(labels, E = pbmc)
 #' }
-GenerateLabels = function(cr, E = NULL, smooth = TRUE, new_populations = NULL, new_categories = NULL, min.cells = 10,  spring.dir = NULL)
+GenerateLabels = function(cr, E = NULL, smooth = TRUE, new_populations = NULL, 
+                          new_categories = NULL, min.cells = 10,  spring.dir = NULL, graph.used = "nn")
 {
   
   # if using SPRING, load data
@@ -85,15 +86,16 @@ GenerateLabels = function(cr, E = NULL, smooth = TRUE, new_populations = NULL, n
   # check for Seurat object
   flag = class(E) == "Seurat"
   
-  if (flag){
+  if (flag) {
     default.assay <- Seurat::DefaultAssay(E)
-    logik = any(grepl(paste0(default.assay, "nn"), names(E@graphs)))
-    if (logik) {
-      edges = E@graphs[[which(grepl(paste0(default.assay, "nn"), names(E@graphs)))]]
-    } else {
-      edges = E@graphs[[1]]
+    edges = E@graphs[[which(grepl(paste0("_", graph.used), 
+                                  names(E@graphs)))]]
+    if (ncol(edges) > 1e+05) {
+      edges = list(edges)
     }
-    dM = CID.GetDistMat(edges)
+    else {
+      edges = CID.GetDistMat(edges)
+    }
   }
   
   # remove louvain clusters
@@ -139,12 +141,12 @@ GenerateLabels = function(cr, E = NULL, smooth = TRUE, new_populations = NULL, n
   
   # assign Unclassifieds
   if (!is.null(spring.dir) | flag){
-  celltypes = CID.entropy(celltypes, dM)
-  immune = CID.entropy(immune, dM)
+  celltypes = CID.entropy(celltypes, edges)
+  immune = CID.entropy(immune, edges)
   # smooth 
   if (smooth) {
-    celltypes= CID.smooth(celltypes, dM[[1]])
-    immune = CID.smooth(immune, dM[[1]])
+    celltypes= CID.smooth(celltypes, edges[[1]])
+    immune = CID.smooth(immune, edges[[1]])
   }
   }
   # set consistent unclassified cells
