@@ -19,7 +19,9 @@
 <!-- ABOUT THE PROJECT -->
 #### What is SignacX?
 
-SignacX is software that classifies the cellular phenotype for each individual cell in single cell RNA-sequencing data using neural networks trained with sorted bulk gene expression data from the [Human Primary Cell Atlas](https://bmcgenomics.biomedcentral.com/articles/10.1186/1471-2164-14-632). To learn more, check out the [publication](https://www.fortunejournals.com/abstract/cell-type-classification-and-discovery-across-diseases-technologies-and-tissues-reveals-conserved-gene-signatures-of-immune-phenot-4289.html) Cell Type Classification and Discovery across Diseases, Technologies and Tissues Reveals Conserved Gene Signatures of Immune Phenotypes), [website](https://sanofi-public.github.io/PMCB-SignacX/) and [code base](https://github.com/Sanofi-Public/PMCB-SignacX/). You can install SignacX from GitHub:
+SignacX is software that classifies the cellular phenotype for each individual cell in single cell RNA-sequencing data using neural networks trained with sorted bulk gene expression data from the [Human Primary Cell Atlas](https://bmcgenomics.biomedcentral.com/articles/10.1186/1471-2164-14-632). To learn more, check out the [publication](https://www.fortunejournals.com/abstract/cell-type-classification-and-discovery-across-diseases-technologies-and-tissues-reveals-conserved-gene-signatures-of-immune-phenot-4289.html) Cell Type Classification and Discovery across Diseases, Technologies and Tissues Reveals Conserved Gene Signatures of Immune Phenotypes), [website](https://sanofi-public.github.io/PMCB-SignacX/) and [code base](https://github.com/Sanofi-Public/PMCB-SignacX/). 
+
+You can install the most up-to-date version of SignacX from GitHub (as the CRAN version is currently incompatible with Seurat v5):
 
 ```R
 if (!require("devtools", quietly = TRUE))
