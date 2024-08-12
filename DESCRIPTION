@@ -13,8 +13,8 @@ Authors@R: c(
   person(given = "Emanuele", family = "de Rinaldis", email = "Emanuele.deRinaldis@sanofi.com", role = c( "aut")),
   person("Sanofi US", role = "fnd"))
 Maintainer: Andre Kurlovs <andre.kurlovs@sanofi.com>
-URL: https://github.com/Sanofi-Public/PMCB-SignacX
-BugReports: https://github.com/Sanofi-Public/PMCB-SignacX/issues
+URL: https://github.com/akurlovs/SignacX
+BugReports: https://github.com/akurlovs/SignacX/issues
 Imports: neuralnet, lme4, methods, Matrix, pbmcapply, Seurat(>= 5.0.1),
         RJSONIO, igraph (>= 1.2.1), jsonlite (>= 1.5), RColorBrewer (>=
         1.1.2), stats

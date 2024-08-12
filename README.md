@@ -8,18 +8,18 @@
     <a href="https://sanofi-public.github.io/PMCB-SignacX/"><strong>Explore the Website »</strong></a>
     <br />
     <br />
-    <a href="https://htmlpreview.github.io/?https://github.com/Sanofi-Public/PMCB-SignacX/blob/main/vignettes/signac-Seurat_pbmcs.html">View Demo</a>
+    <a href="https://htmlpreview.github.io/?https://github.com/akurlovs/SignacX/blob/main/vignettes/signac-Seurat_pbmcs.html">View Demo</a>
     ·
-    <a href="https://github.com/Sanofi-Public/PMCB-SignacX/">View Code Base</a>
+    <a href="https://github.com/akurlovs/SignacX/">View Code Base</a>
     ·
-    <a href="https://github.com/Sanofi-Public/PMCB-SignacX/issues">Request Feature</a>
+    <a href="https://github.com/akurlovs/SignacX/issues">Request Feature</a>
   </p>
 </p>
 
 <!-- ABOUT THE PROJECT -->
 #### What is SignacX?
 
-SignacX is software that classifies the cellular phenotype for each individual cell in single cell RNA-sequencing data using neural networks trained with sorted bulk gene expression data from the [Human Primary Cell Atlas](https://bmcgenomics.biomedcentral.com/articles/10.1186/1471-2164-14-632). To learn more, check out the [publication](https://www.fortunejournals.com/abstract/cell-type-classification-and-discovery-across-diseases-technologies-and-tissues-reveals-conserved-gene-signatures-of-immune-phenot-4289.html) Cell Type Classification and Discovery across Diseases, Technologies and Tissues Reveals Conserved Gene Signatures of Immune Phenotypes), [website](https://sanofi-public.github.io/PMCB-SignacX/) and [code base](https://github.com/Sanofi-Public/PMCB-SignacX/). 
+SignacX is software that classifies the cellular phenotype for each individual cell in single cell RNA-sequencing data using neural networks trained with sorted bulk gene expression data from the [Human Primary Cell Atlas](https://bmcgenomics.biomedcentral.com/articles/10.1186/1471-2164-14-632). To learn more, check out the [publication](https://www.fortunejournals.com/abstract/cell-type-classification-and-discovery-across-diseases-technologies-and-tissues-reveals-conserved-gene-signatures-of-immune-phenot-4289.html) Cell Type Classification and Discovery across Diseases, Technologies and Tissues Reveals Conserved Gene Signatures of Immune Phenotypes), [website](https://sanofi-public.github.io/PMCB-SignacX/) and [code base](https://github.com/akurlovs/SignacX/). 
 
 You can install the most up-to-date version of SignacX from GitHub (as the CRAN version is currently incompatible with Seurat v5):
 
@@ -27,7 +27,7 @@ You can install the most up-to-date version of SignacX from GitHub (as the CRAN 
 if (!require("devtools", quietly = TRUE))
   install.packages("devtools")
 
-devtools::install_github("Sanofi-Public/PMCB-SignacX", ref = "main")
+devtools::install_github("akurlovs/SignacX", ref = "main")
 library(SignacX)
 ```
 

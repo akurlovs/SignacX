@@ -13,7 +13,7 @@
 #' P = GetModels()
 #' }
 GetModels_HPCA <- function(){
-  return(readRDS(url("https://github.com/Sanofi-Public/PMCB-SignacX/blob/main/assets/Models_HPCA.rds?raw=TRUE","rb")))
+  return(readRDS(url("https://github.com/akurlovs/SignacX/blob/main/assets/Models_HPCA.rds?raw=TRUE","rb")))
 }
 
 #' Loads bootstrapped HPCA training data from GitHub
@@ -29,7 +29,7 @@ GetModels_HPCA <- function(){
 #' P = GetTrainingData_HPCA()
 #' }
 GetTrainingData_HPCA <- function(){
-  return(readRDS(url("https://github.com/Sanofi-Public/PMCB-SignacX/blob/main/assets/training_HPCA.rds?raw=TRUE","rb")))
+  return(readRDS(url("https://github.com/akurlovs/SignacX/blob/main/assets/training_HPCA.rds?raw=TRUE","rb")))
 }
 
 #' Generates cellular phenotype labels
