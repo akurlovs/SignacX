@@ -134,16 +134,16 @@ Signac <- function(E, R = 'default', spring.dir = NULL, N = 100, num.cores = 1, 
   res = pbmcapply::pbmclapply(R$Reference, FUN = function(x){
     # keep same gene names
     gns = sort(intersect(rownames(V), colnames(x)))
-    Z = V[rownames(V) %in% gns, ]
-    dat = x[,colnames(x) %in% gns]
-    Z = Z[order(rownames(Z)), ]
-    dat = dat[, order(colnames(dat))]
+    Z = V[rownames(V) %in% gns, , drop = FALSE]
+    dat = x[,colnames(x) %in% gns , drop = FALSE]
+    Z = Z[order(rownames(Z)), , drop = FALSE]
+    dat = dat[, order(colnames(dat)), drop = FALSE]
     
     # remove any low variance genes
     kmu = apply(Z, 1, function(x){sum(x != 0)})
     logik = kmu > 0;
-    Z = Z[logik,]
-    dat = dat[,logik]
+    Z = Z[logik, , drop = FALSE]
+    dat = dat[,logik, drop = FALSE]
     
     # run imputation (if desired)
     if (impute){
