@@ -56,7 +56,10 @@
 #' # save results
 #' saveRDS(pbmc, "example_pbmcs.rds")
 #' }
-Signac <- function(E, R = 'default', spring.dir = NULL, N = 100, num.cores = 1, threshold = 0, smooth = TRUE, impute = TRUE, verbose = TRUE, do.normalize = TRUE, return.probability = FALSE, hidden = 1, set.seed = TRUE, seed = '42', graph.used = "nn")
+Signac <- function(E, R = 'default', spring.dir = NULL, edges.mat = NULL,
+                   N = 100, num.cores = 1, threshold = 0, smooth = TRUE, 
+                   impute = TRUE, verbose = TRUE, do.normalize = TRUE, 
+                   return.probability = FALSE, hidden = 1, set.seed = TRUE, seed = '42', graph.used = "nn")
 {
   if (!is.null(spring.dir))
     spring.dir = gsub("\\/$", "", spring.dir, perl = TRUE)
@@ -126,10 +129,14 @@ Signac <- function(E, R = 'default', spring.dir = NULL, N = 100, num.cores = 1, 
     } else {
       edges = list(edges)
     }
-  } else {
+  } else if (!is.null(spring.dir)) {
     edges = CID.LoadEdges(data.dir = spring.dir)
     louvain = CID.Louvain(edges = edges)
     edges = CID.GetDistMat(edges, n = 1)
+  } else if (!is.null(edges.mat)) {
+    edges = CID.GetDistMat(edges, n = 1)
+  } else {
+    print("edges not provided, program will fail")
   }
   res = pbmcapply::pbmclapply(R$Reference, FUN = function(x){
     # keep same gene names
