@@ -67,13 +67,24 @@ GetTrainingData_HPCA <- function(){
 #' labels = SignacFast(E = pbmc)
 #' celltypes = GenerateLabels(labels, E = pbmc)
 #' }
-GenerateLabels = function(cr, E = NULL, smooth = TRUE, new_populations = NULL, new_categories = NULL, min.cells = 10,  spring.dir = NULL, graph.used = "nn")
+GenerateLabels = function(cr, E = NULL, smooth = TRUE, 
+                          edges.mat = NULL,
+                          new_populations = NULL, 
+                          new_categories = NULL, min.cells = 10,  spring.dir = NULL, graph.used = "nn")
 {
   
   # if using SPRING, load data
   if (!is.null(spring.dir)){
     edges = CID.LoadEdges(data.dir = spring.dir)
     edges = CID.GetDistMat(edges)
+  }
+  
+  if (!is.null(edges.mat)) {
+    if (ncol(edges) > 100000) {
+      edges = list(edges)
+    } else {
+      edges = CID.GetDistMat(edges)
+    }
   }
   
   # check for Seurat object
@@ -130,7 +141,7 @@ GenerateLabels = function(cr, E = NULL, smooth = TRUE, new_populations = NULL, n
   }
   
   # assign Unclassifieds
-  if (!is.null(spring.dir) | flag){
+  if (!is.null(spring.dir) | flag | (!is.null(edges.mat)){
   celltypes = CID.entropy(celltypes, edges)
   immune = CID.entropy(immune, edges)
   # smooth 
@@ -155,7 +166,7 @@ GenerateLabels = function(cr, E = NULL, smooth = TRUE, new_populations = NULL, n
   
   res$Immune = immune
   
-  if (!is.null(spring.dir) | flag)
+  if (!is.null(spring.dir) | flag | (!is.null(edges.mat))
   {
   do = data.frame(table(louvain[cellstates == "Unclassified"]))
   df = data.frame(table(louvain[louvain %in% do$Var1]))
