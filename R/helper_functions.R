@@ -29,7 +29,7 @@ GetModels_HPCA <- function(){
 #' P = GetTrainingData_HPCA()
 #' }
 GetTrainingData_HPCA <- function(){
-  return(readRDS(url("https://github.com/akurlovs/SignacX/blob/main/assets/training_HPCA.rds?raw=TRUE","rb")))
+  return(readRDS(url("https://github.com/akurlovs/SignacX/tree/main/assets/training_HPCA.rds?raw=TRUE","rb")))
 }
 
 #' Generates cellular phenotype labels
