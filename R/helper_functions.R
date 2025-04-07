@@ -13,7 +13,7 @@
 #' P = GetModels()
 #' }
 GetModels_HPCA <- function(){
-  return(readRDS(url("https://github.com/akurlovs/SignacX/blob/main/assets/Models_HPCA.rds?raw=TRUE","rb")))
+  return(readRDS(url("https://github.com/akurlovs/SignacX/tree/main/assets/Models_HPCA.rds?raw=TRUE","rb")))
 }
 
 #' Loads bootstrapped HPCA training data from GitHub
