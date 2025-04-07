@@ -134,8 +134,8 @@ Signac <- function(E, R = 'default', spring.dir = NULL, edges.mat = NULL,
     louvain = CID.Louvain(edges = edges)
     edges = CID.GetDistMat(edges, n = 1)
   } else if (!is.null(edges.mat)) {
-    louvain = CID.Louvain(edges = edges)
-    edges = CID.GetDistMat(edges, n = 1)
+    louvain = CID.Louvain(edges = edges.mat)
+    edges = CID.GetDistMat(edges = edges.mat, n = 1)
   } else {
     print("edges not provided, program will fail")
   }
