@@ -141,7 +141,7 @@ GenerateLabels = function(cr, E = NULL, smooth = TRUE,
   }
   
   # assign Unclassifieds
-  if (!is.null(spring.dir) | flag | (!is.null(edges.mat)){
+  if (!is.null(spring.dir) | flag | !is.null(edges.mat)) {
   celltypes = CID.entropy(celltypes, edges)
   immune = CID.entropy(immune, edges)
   # smooth 
@@ -166,7 +166,7 @@ GenerateLabels = function(cr, E = NULL, smooth = TRUE,
   
   res$Immune = immune
   
-  if (!is.null(spring.dir) | flag | (!is.null(edges.mat))
+  if (!is.null(spring.dir) | flag | !is.null(edges.mat))
   {
   do = data.frame(table(louvain[cellstates == "Unclassified"]))
   df = data.frame(table(louvain[louvain %in% do$Var1]))
