@@ -86,10 +86,10 @@ GenerateLabels = function(cr, E = NULL, smooth = TRUE,
   }
   
   if (!is.null(edges.mat)) {
-    if (ncol(edges) > 100000) {
-      edges = list(edges)
+    if (ncol(edges.mat) > 100000) {
+      edges = list(edges.mat)
     } else {
-      edges = CID.GetDistMat(edges)
+      edges = CID.GetDistMat(edges.mat)
     }
   }
   
